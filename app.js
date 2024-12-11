@@ -1,8 +1,8 @@
 const express = require('express')
-const morgan = require('morgan')
+const logger = require('./utils/logger')
 
 const app = express()
-app.use(morgan('dev'))
+app.use(logger)
 app.get('*', (_, res) => {
   res.send('Hello World!')
 })
