@@ -12,7 +12,11 @@ const router = require('./features/index.routes')
 
 const app = express()
 app.use(logger)
-app.use(cors({ origin: '*' }))
+app.use(
+	cors({
+		origin: ['http://localhost:5173', 'https://flixmate-client.onrender.com'],
+	})
+)
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(authMiddleware)
@@ -20,5 +24,5 @@ app.use(router)
 // app.use(notFoundMiddleware)
 app.use(errorMiddleware)
 app.listen(require('./config').PORT, _ =>
-  console.log('Listening on port: ', require('./config').PORT)
+	console.log('Listening on port: ', require('./config').PORT)
 )
