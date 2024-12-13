@@ -43,6 +43,26 @@ authRouter.post('/login', async (req, res, next) => {
   }
 })
 
+authRouter.get('/refresh-token', async (req, res, next) => {
+  try {
+    if (!(req.token || req.userId)) {
+      throw Error(
+        `The route "${req.originalUrl}" requires a valid token. 🍪🍪🍪`,
+        { cause: 'no-cookie' }
+      )
+    }
+
+    const user = await getUserById(req.userId)
+    const token = await createJWTFromUser(user)
+
+    res.cookie('bearer', token, cookieOptions.set)
+    res.status(200).json({ jwt: token })
+    return
+  } catch (error) {
+    next(error)
+  }
+})
+
 authRouter.post('/logout', (_, res) => {
   res.clearCookie('bearer', cookieOptions.clear)
   res.status(200).json({ message: 'Succesfully disconnected' })
