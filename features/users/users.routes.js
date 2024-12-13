@@ -4,6 +4,8 @@ const userRouter = require('express').Router()
 const authRouter = require('express').Router()
 const router = require('express').Router()
 
+const cookieOptions = require('./users.config')
+
 const {
   checkPasswordMatch,
   createJWTFromUser,
@@ -31,13 +33,7 @@ authRouter.post('/login', async (req, res, next) => {
     const user = await getUserByEmail(req.body.email)
     if (await checkPasswordMatch(req.body.password, user._id)) {
       const token = await createJWTFromUser(user)
-      res.cookie('bearer', token, {
-        httpOnly: true,
-        sameSite: 'None',
-        secure: true,
-        partitioned: true,
-        maxAge: 1000 * 60 * 60 * 12,
-      })
+      res.cookie('bearer', token, cookieOptions.set)
       res.status(200).json({ jwt: token })
       return
     }
@@ -48,12 +44,7 @@ authRouter.post('/login', async (req, res, next) => {
 })
 
 authRouter.post('/logout', (_, res) => {
-  res.clearCookie('bearer', {
-    httpOnly: true,
-    sameSite: 'None',
-    secure: true,
-    partitioned: true,
-  })
+  res.clearCookie('bearer', cookieOptions.clear)
   res.status(200).json({ message: 'Succesfully disconnected' })
 })
 
