@@ -12,6 +12,8 @@ const {
   getUsers,
   getUserById,
   getUserByEmail,
+  updateUserById,
+  deleteUserById,
 } = require('./users.services')
 
 authRouter.post('/signup', async (req, res, next) => {
@@ -68,6 +70,30 @@ userRouter.get('/:userId', async (req, res, next) => {
   try {
     const { userId } = req.params
     const user = await getUserById(userId)
+    res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
+userRouter.put('/:userId', async (req, res, next) => {
+  const { userId } = req.params
+  const update = req.body
+
+  try {
+    const user = await updateUserById(userId, update)
+    res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
+userRouter.delete('/:userId', async (req, res, next) => {
+  const { userId } = req.params
+
+  try {
+    const user = await deleteUserById(userId)
+    console.log(`🚀 ~ userRouter.delete ~ user:`, user)
     res.status(200).json(user)
   } catch (error) {
     next(error)

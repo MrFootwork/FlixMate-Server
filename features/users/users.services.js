@@ -63,6 +63,30 @@ async function getUserById(userId) {
   }
 }
 
+async function updateUserById(userId, update) {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, update, {
+      returnDocument: 'after',
+    }).lean()
+
+    delete updatedUser.password
+
+    return updatedUser
+  } catch (error) {
+    throw error
+  }
+}
+
+async function deleteUserById(userId) {
+  try {
+    const user = await User.findByIdAndDelete(userId).lean()
+    delete user.password
+    return user
+  } catch (error) {
+    throw error
+  }
+}
+
 async function getUserByEmail(userEmail) {
   try {
     const user = await User.findOne({ email: userEmail }, { password: 0 })
@@ -78,4 +102,6 @@ module.exports.getUserFromJWT = getUserFromJWT
 module.exports.getUsers = getUsers
 module.exports.createUser = createUser
 module.exports.getUserById = getUserById
+module.exports.updateUserById = updateUserById
+module.exports.deleteUserById = deleteUserById
 module.exports.getUserByEmail = getUserByEmail
