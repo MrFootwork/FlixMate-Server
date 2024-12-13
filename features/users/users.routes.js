@@ -45,7 +45,12 @@ authRouter.post('/login', async (req, res, next) => {
 })
 
 authRouter.post('/logout', (_, res) => {
-  res.clearCookie('bearer')
+  res.clearCookie('bearer', {
+    httpOnly: true,
+    sameSite: 'None',
+    secure: true,
+    partitioned: true,
+  })
   res.status(200).json({ message: 'Succesfully disconnected' })
 })
 
