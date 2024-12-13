@@ -21,13 +21,13 @@ const options = require('./movies.config')
  * });
  */
 async function getMoviesFromAPI() {
-	try {
-		const movies = (await axios.request(options.topPicks)).data.results
+  try {
+    const movies = (await axios.request(options.topPicks)).data.results
 
-		return movies
-	} catch (error) {
-		throw error
-	}
+    return movies
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -56,30 +56,30 @@ async function getMoviesFromAPI() {
  * });
  */
 async function updateMovies(movies) {
-	const sanitizedMovies = movies.map(movie => ({
-		...movie,
-		flixmate_category: ['top-picks'],
-	}))
+  const sanitizedMovies = movies.map(movie => ({
+    ...movie,
+    flixmate_category: ['top-picks'],
+  }))
 
-	const updateOrInsert = sanitizedMovies.map(doc => ({
-		updateOne: {
-			filter: { imdb_id: doc.imdb_id },
-			update: { $set: doc }, // Update the whole document
-			upsert: true, // Insert the document if it doesn't exist
-		},
-	}))
+  const updateOrInsert = sanitizedMovies.map(doc => ({
+    updateOne: {
+      filter: { imdb_id: doc.imdb_id },
+      update: { $set: doc }, // Update the whole document
+      upsert: true, // Insert the document if it doesn't exist
+    },
+  }))
 
-	try {
-		const result = await Movie.bulkWrite(updateOrInsert)
+  try {
+    const result = await Movie.bulkWrite(updateOrInsert)
 
-		return {
-			found: result.matchedCount,
-			modified: result.modifiedCount,
-			upserted: result.upsertedCount,
-		}
-	} catch (error) {
-		throw error
-	}
+    return {
+      found: result.matchedCount,
+      modified: result.modifiedCount,
+      upserted: result.upsertedCount,
+    }
+  } catch (error) {
+    throw error
+  }
 }
 
 /**
@@ -96,14 +96,37 @@ async function updateMovies(movies) {
  * });
  */
 async function getMovies() {
-	try {
-		// top 10 movies with highest rating
-		return await Movie.find({}).sort({ rating: -1 }).limit(10)
-	} catch (error) {
-		throw error
-	}
+  try {
+    // top 10 movies with highest rating
+    return await Movie.find({}).sort({ rating: -1 }).limit(10)
+  } catch (error) {
+    throw error
+  }
+}
+
+async function searchForMovies(searchString) {
+  const options = {
+    method: 'GET',
+    url: 'https://unogs-unogs-v1.p.rapidapi.com/search/titles',
+    params: {
+      title: searchString,
+    },
+    headers: {
+      'x-rapidapi-key': require('../../config').RAPID_API_KEY,
+      'x-rapidapi-host': 'unogs-unogs-v1.p.rapidapi.com',
+    },
+  }
+
+  try {
+    const response = await axios.request(options)
+    console.log(response.data)
+    return response.data.results
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 module.exports.getMoviesFromAPI = getMoviesFromAPI
 module.exports.updateMovies = updateMovies
 module.exports.getMovies = getMovies
+module.exports.searchForMovies = searchForMovies
