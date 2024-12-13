@@ -29,7 +29,12 @@ authRouter.post('/login', async (req, res, next) => {
     const user = await getUserByEmail(req.body.email)
     if (await checkPasswordMatch(req.body.password, user._id)) {
       const token = await createJWTFromUser(user)
-      res.cookie('bearer', token)
+      res.cookie('bearer', token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        partition: true,
+      })
       res.status(200).json({ jwt: token })
       return
     }
