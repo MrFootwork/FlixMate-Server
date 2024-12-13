@@ -106,10 +106,12 @@ async function getMovies() {
 
 async function searchForMovies(searchString) {
   try {
-    return await axios.request({
+    const response = await axios.request({
       ...options.titleSearch,
       title: searchString,
-    }).data.results
+    })
+
+    return response.data.results
   } catch (error) {
     throw error
   }
