@@ -31,7 +31,7 @@ authRouter.post('/login', async (req, res, next) => {
       const token = await createJWTFromUser(user)
       res.cookie('bearer', token, {
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: 'None',
         secure: true,
         partitioned: true,
       })
