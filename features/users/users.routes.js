@@ -34,6 +34,7 @@ authRouter.post('/login', async (req, res, next) => {
         sameSite: 'None',
         secure: true,
         partitioned: true,
+        maxAge: 1000 * 60 * 60 * 12,
       })
       res.status(200).json({ jwt: token })
       return
