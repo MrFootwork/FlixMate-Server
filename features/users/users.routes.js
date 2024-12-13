@@ -33,7 +33,7 @@ authRouter.post('/login', async (req, res, next) => {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-        partition: true,
+        partitioned: true,
       })
       res.status(200).json({ jwt: token })
       return
