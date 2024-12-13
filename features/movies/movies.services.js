@@ -105,24 +105,13 @@ async function getMovies() {
 }
 
 async function searchForMovies(searchString) {
-  const options = {
-    method: 'GET',
-    url: 'https://unogs-unogs-v1.p.rapidapi.com/search/titles',
-    params: {
-      title: searchString,
-    },
-    headers: {
-      'x-rapidapi-key': require('../../config').RAPID_API_KEY,
-      'x-rapidapi-host': 'unogs-unogs-v1.p.rapidapi.com',
-    },
-  }
-
   try {
-    const response = await axios.request(options)
-    console.log(response.data)
-    return response.data.results
+    return await axios.request({
+      ...options.titleSearch,
+      title: searchString,
+    }).data.results
   } catch (error) {
-    console.error(error)
+    throw error
   }
 }
 

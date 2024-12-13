@@ -6,27 +6,33 @@ const START_RATING = 7
 const COUNTRY_CODES = ['FR', 'DE', 'ES']
 
 const defaultConfig = {
-	method: 'GET',
-	url: 'https://unogs-unogs-v1.p.rapidapi.com/search/titles',
-	headers: {
-		'x-rapidapi-key': config.RAPID_API_KEY,
-		'x-rapidapi-host': 'unogs-unogs-v1.p.rapidapi.com',
-	},
+  method: 'GET',
+  url: 'https://unogs-unogs-v1.p.rapidapi.com/search/titles',
+  headers: {
+    'x-rapidapi-key': config.RAPID_API_KEY,
+    'x-rapidapi-host': 'unogs-unogs-v1.p.rapidapi.com',
+  },
 }
 
 module.exports = {
-	// Top Picks of the last couple months
-	topPicks: {
-		...defaultConfig,
-		params: {
-			order_by: 'date',
-			limit: '10',
-			start_rating: START_RATING,
-			new_date: getDate().newDate,
-			start_year: getDate().startYear,
-			country_list: getUNOGSCountryList(COUNTRY_CODES),
-		},
-	},
+  // Top Picks of the last couple months
+  topPicks: {
+    ...defaultConfig,
+    params: {
+      order_by: 'date',
+      limit: '10',
+      start_rating: START_RATING,
+      new_date: getDate().newDate,
+      start_year: getDate().startYear,
+      country_list: getUNOGSCountryList(COUNTRY_CODES),
+    },
+  },
+  titleSearch: {
+    ...defaultConfig,
+    params: {
+      title: '',
+    },
+  },
 }
 
 /**
@@ -46,14 +52,14 @@ module.exports = {
  * // Output: { newDate: "2024-12-01", startYear: "2024" }
  */
 function getDate() {
-	const currentDate = new Date()
-	currentDate.setDate(1)
-	currentDate.setMonth(currentDate.getMonth() - MONTHS_IN_PAST)
+  const currentDate = new Date()
+  currentDate.setDate(1)
+  currentDate.setMonth(currentDate.getMonth() - MONTHS_IN_PAST)
 
-	const newDate = currentDate.toISOString().split('T')[0]
-	const startYear = currentDate.getFullYear().toString() // Extract the adjusted year
+  const newDate = currentDate.toISOString().split('T')[0]
+  const startYear = currentDate.getFullYear().toString() // Extract the adjusted year
 
-	return { newDate, startYear }
+  return { newDate, startYear }
 }
 
 /**
@@ -75,7 +81,7 @@ function getDate() {
  * console.log(result); // Output: '45,39,270'
  */
 function getUNOGSCountryList(countryCodes) {
-	return countryCodes
-		.map(code => countries.find(({ countrycode }) => countrycode === code).id)
-		.join(',')
+  return countryCodes
+    .map(code => countries.find(({ countrycode }) => countrycode === code).id)
+    .join(',')
 }

@@ -35,7 +35,6 @@ moviesRouter.get('/top-picks', async (req, res, next) => {
 moviesRouter.get('/', async (req, res, next) => {
   try {
     const search = req.query.s
-    console.log(req.query)
     const result = await searchForMovies(search)
     res.status(200).json(result)
   } catch (error) {
