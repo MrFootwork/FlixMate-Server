@@ -80,6 +80,11 @@ async function updateUserById(userId, update) {
 async function deleteUserById(userId) {
   try {
     const user = await User.findByIdAndDelete(userId).lean()
+    if (!user)
+      throw Error(`User with ID ${userId} doesn't exists.`, {
+        cause: 'no-user',
+      })
+
     delete user.password
     return user
   } catch (error) {

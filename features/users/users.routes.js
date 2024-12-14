@@ -31,6 +31,8 @@ authRouter.post('/signup', async (req, res, next) => {
 authRouter.post('/login', async (req, res, next) => {
   try {
     const user = await getUserByEmail(req.body.email)
+    if (!user) throw Error(`🔐🔐 Wrong Credentials 🙅‍♂️🙅‍♀️`, { cause: 'no-user' })
+
     if (await checkPasswordMatch(req.body.password, user._id)) {
       const token = await createJWTFromUser(user)
       res.cookie('bearer', token, cookieOptions.set)

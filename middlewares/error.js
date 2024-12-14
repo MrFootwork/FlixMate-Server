@@ -5,7 +5,13 @@ function errorMiddleware(error, req, res, next) {
     return res.status(403).json({ message: error.message })
   }
 
-  res.status(500).json({ message: 'Internal server error' })
+  if (error.cause === 'no-user') {
+    return res.status(404).json({ message: error.message })
+  }
+
+  res
+    .status(500)
+    .json({ message: 'An unkown internal server error occurred. 🔥🔥🔥' })
   next()
 }
 
