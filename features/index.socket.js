@@ -48,7 +48,7 @@ function addListenersToSocket(socket) {
       }
     } catch (error) {
       console.log(error)
-      socket.emit('error', error)
+      socket.emit('error', 'The room you are trying to join does not exist!')
     }
   })
 }
