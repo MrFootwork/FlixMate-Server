@@ -1,6 +1,7 @@
 const http = require('http')
 const { getUserFromJWT } = require('./users/users.services')
 const { getRoombyId, addUserToRoom } = require('./rooms/rooms.services')
+const { createMessage } = require('./messages/messages.services')
 
 function socketServer(app) {
   const server = http.createServer(app)
@@ -51,6 +52,23 @@ function addListenersToSocket(socket) {
       socket.emit('error', 'The room you are trying to join does not exist!')
     }
   })
+  socket.on('receive-message', message => {
+    try {
+      handleMessageReceived(socket, socket.room, message, socket.user)
+    } catch (error) {
+      console.log(error)
+      socket.emit('error', error)
+    }
+  })
+}
+
+function broadcastMessage(socket, room, message) {
+  socket.to(room).emit('new-message', message)
+}
+
+async function handleMessageReceived(socket, room, text, senderId) {
+  const message = await createMessage(text, senderId)
+  broadcastMessage(socket, room, message.text)
 }
 
 module.exports = socketServer

@@ -2,12 +2,24 @@ const Room = require('./rooms.models')
 const { ObjectId } = require('mongoose')
 
 async function getRooms() {
-  return await Room.find({}, { key: 0 })
+  return await Room.find({}, { key: 0 }).populate([
+    {
+      path: 'participants',
+      select: '-password',
+    },
+    {
+      path: 'owner',
+      select: '-password',
+    },
+  ])
 }
 
 async function getRoombyId(roomId) {
   try {
-    return await Room.findById(roomId, { key: 0 })
+    return await Room.findById(roomId, { key: 0 }).populate({
+      path: 'participants',
+      select: '-password',
+    })
   } catch (error) {
     throw error
   }
@@ -30,21 +42,36 @@ async function deleteRoomById(roomId) {
 }
 
 async function addUserToRoom(userId, roomId) {
-  return await Room.updateOne(
-    { _id: roomId },
-    { $push: { participants: userId } }
-  )
+  try {
+    const room = await Room.findById(roomId)
+    if (!room.participants.includes(userId)) {
+      return await Room.updateOne(
+        { _id: roomId },
+        { $push: { participants: userId } }
+      )
+    }
+  } catch (error) {
+    throw error
+  }
 }
 
 async function removeUserFromRoom(userId, roomId) {
-  const room = await Room.findById(roomId)
-  await room.participants.remove(userId)
-  await room.save()
-  return room
+  try {
+    const room = await Room.findById(roomId)
+    await room.participants.remove(userId)
+    await room.save()
+    return room
+  } catch (error) {
+    throw error
+  }
 }
 
 async function changeRoomMovie(movie, roomId) {
-  return Room.updateOne({ _id: roomId }, { movie: movie })
+  try {
+    return await Room.updateOne({ _id: roomId }, { movie: movie })
+  } catch (error) {
+    throw error
+  }
 }
 
 module.exports.getRooms = getRooms
