@@ -9,7 +9,7 @@ const authMiddleware = require('./middlewares/auth')
 const errorMiddleware = require('./middlewares/error')
 const notFoundMiddleware = require('./middlewares/notFound')
 const router = require('./features/index.routes')
-const { socketServer } = require('./features/rooms/rooms.routes')
+const socketServer = require('./features/index.socket')
 
 const app = express()
 const server = socketServer(app)
