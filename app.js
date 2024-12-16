@@ -9,12 +9,19 @@ const authMiddleware = require('./middlewares/auth')
 const errorMiddleware = require('./middlewares/error')
 const notFoundMiddleware = require('./middlewares/notFound')
 const router = require('./features/index.routes')
+const { socketServer } = require('./features/rooms/rooms.routes')
 
 const app = express()
+const server = socketServer(app)
+
 app.use(logger)
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://flixmate-client.onrender.com'],
+    origin: [
+      'http://localhost:5173',
+      'https://flixmate-client.onrender.com',
+      'https://www.netflix.com/',
+    ],
     credentials: true,
   })
 )
@@ -24,6 +31,10 @@ app.use(authMiddleware)
 app.use(router)
 // app.use(notFoundMiddleware)
 app.use(errorMiddleware)
-app.listen(require('./config').PORT, _ =>
+// app.listen(require('./config').PORT, _ =>
+//   console.log('Listening on port: ', require('./config').PORT)
+// )
+
+server.listen(require('./config').PORT, _ =>
   console.log('Listening on port: ', require('./config').PORT)
 )
