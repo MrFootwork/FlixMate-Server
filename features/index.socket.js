@@ -5,6 +5,8 @@ const { createMessage } = require('./messages/messages.services')
 
 function socketServer(app) {
   const server = http.createServer(app)
+
+  /** @type {import('socket.io').Server} */
   const io = require('socket.io')(server, {
     cors: {
       origin: 'https://www.netflix.com',
@@ -36,10 +38,15 @@ function socketServer(app) {
   return server
 }
 
+/**
+ * Adds all declared listeners to the socket.
+ * @param {import('socket.io').Socket} socket - The socket instance.
+ */
 function addListenersToSocket(socket) {
   socket.on('join-room', async room => {
     try {
       const dbRoom = await getRoombyId(room)
+
       if (dbRoom) {
         await addUserToRoom(socket.user.id, room)
         socket.room = room
@@ -52,6 +59,19 @@ function addListenersToSocket(socket) {
       socket.emit('error', 'The room you are trying to join does not exist!')
     }
   })
+
+  socket.on('netflix', async data => {
+    console.log(`🚀 ~ addListenersToSocket ~ data:`, data)
+
+    try {
+      // const user = await getUserFromJWT(socket.handshake.auth.token)
+      console.log(`🚀 ~ addListenersToSocket ~ user:`, user)
+    } catch (error) {
+      console.log(error)
+      socket.emit('error', "The video player event couldn't be processed.")
+    }
+  })
+
   socket.on('receive-message', message => {
     try {
       handleMessageReceived(socket, socket.room, message, socket.user)

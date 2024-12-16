@@ -9,7 +9,7 @@ function authMiddleware(req, res, next) {
     //Check for cookies first because they are the lower priority
     if (req.cookies['bearer']) {
       token = req.cookies['bearer']
-      console.log('🍪 Found Token in cookies ', token)
+      // console.log('🍪 Found Token in cookies ', token)
     }
 
     // Then we check for the auth header
@@ -19,8 +19,8 @@ function authMiddleware(req, res, next) {
 
       if (splitHeader[0] === 'Bearer' && splitHeader[1]) {
         token = splitHeader[1]
-        console.log('🍪 Header ', authHeader, splitHeader)
-        console.log('🍪 Found Token in header ', token)
+        // console.log('🍪 Header ', authHeader, splitHeader)
+        // console.log('🍪 Found Token in header ', token)
       }
     }
 
