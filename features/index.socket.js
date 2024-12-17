@@ -32,7 +32,7 @@ function socketServer(app) {
 
   io.on('connection', socket => {
     console.log('joined ', socket.user)
-    addListenersToSocket(socket)
+    addListenersToSocket(socket, io)
   })
 
   return server
@@ -42,7 +42,7 @@ function socketServer(app) {
  * Adds all declared listeners to the socket.
  * @param {import('socket.io').Socket} socket - The socket instance.
  */
-function addListenersToSocket(socket) {
+function addListenersToSocket(socket, io) {
   socket.on('join-room', async room => {
     try {
       const dbRoom = await getRoombyId(room)
@@ -62,7 +62,7 @@ function addListenersToSocket(socket) {
     // Listen for events in the room
     socket.on('netflix', async data => {
       console.log('Video data from Netflix: ', data)
-      console.log('SOCKET: ', socket.rooms)
+      console.log('SOCKET: ', socket.rooms, socket.room)
 
       const eventType = data.type
       const user = socket.user
@@ -70,7 +70,7 @@ function addListenersToSocket(socket) {
       const videoTime = data.videoTime
 
       try {
-        socket.to(socket.room).emit('netflix', { eventType, videoTime, user })
+        io.to(socket.room).emit('netflix', { eventType, videoTime, user })
       } catch (error) {
         console.log(error)
         socket.emit('error', "The video player event couldn't be processed.")

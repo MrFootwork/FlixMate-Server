@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 require('./users/users.models')
 
-const URI = `mongodb+srv://FlixMateMaster:${
-  require('../config').DB_PASSWORD
-}@flixmate.wpabc.mongodb.net/FlixMate?retryWrites=true&w=majority&appName=FlixMate`
+console.log(require('../config').DB_URL)
+
+const URI = `mongodb+srv://FlixMateMaster:${require('../config').DB_PASSWORD}${
+  require('../config').DB_URL
+}`
 
 mongoose
   .connect(URI)
