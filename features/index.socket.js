@@ -46,6 +46,13 @@ function addListenersToSocket(socket, io) {
   socket.on('join-room', async room => {
     try {
       const dbRoom = await getRoombyId(room)
+      // setTimeout(() => {
+      //   io.to(socket.room).emit('netflix-send', {
+      //     eventType: 'seeked',
+      //     videoTime: '',
+      //     eventUser: socket.user,
+      //   })
+      // }, 20000)
 
       if (dbRoom) {
         await addUserToRoom(socket.user.id, room)
@@ -70,7 +77,11 @@ function addListenersToSocket(socket, io) {
       const videoTime = data.videoTime
 
       try {
-        io.to(socket.room).emit('netflix', { eventType, videoTime, user })
+        io.to(socket.room).emit('netflix-send', {
+          eventType,
+          videoTime,
+          eventUser: user,
+        })
       } catch (error) {
         console.log(error)
         socket.emit('error', "The video player event couldn't be processed.")
