@@ -20,7 +20,7 @@ module.exports = {
     ...defaultConfig,
     params: {
       order_by: 'date',
-      limit: '10',
+      limit: '20',
       start_rating: START_RATING,
       new_date: getDate().newDate,
       start_year: getDate().startYear,
@@ -31,6 +31,7 @@ module.exports = {
     ...defaultConfig,
     params: {
       title: '',
+      limit: '20',
     },
   },
 }
