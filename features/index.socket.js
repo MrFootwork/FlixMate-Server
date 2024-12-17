@@ -58,18 +58,24 @@ function addListenersToSocket(socket) {
       console.log(error)
       socket.emit('error', 'The room you are trying to join does not exist!')
     }
-  })
 
-  socket.on('netflix', async data => {
-    console.log(`🚀 ~ addListenersToSocket ~ data:`, data)
+    // Listen for events in the room
+    socket.on('netflix', async data => {
+      console.log('Video data from Netflix: ', data)
+      console.log('SOCKET: ', socket.rooms)
 
-    try {
-      // const user = await getUserFromJWT(socket.handshake.auth.token)
-      console.log(`🚀 ~ addListenersToSocket ~ user:`, user)
-    } catch (error) {
-      console.log(error)
-      socket.emit('error', "The video player event couldn't be processed.")
-    }
+      const eventType = data.type
+      const user = socket.user
+      // const roomId = socket.room
+      const videoTime = data.videoTime
+
+      try {
+        socket.to(socket.room).emit('netflix', { eventType, videoTime, user })
+      } catch (error) {
+        console.log(error)
+        socket.emit('error', "The video player event couldn't be processed.")
+      }
+    })
   })
 
   socket.on('receive-message', message => {
