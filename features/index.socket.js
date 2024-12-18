@@ -9,7 +9,11 @@ function socketServer(app) {
   /** @type {import('socket.io').Server} */
   const io = require('socket.io')(server, {
     cors: {
-      origin: 'https://www.netflix.com',
+      origin: [
+        'http://localhost:5173',
+        'https://flixmate-client.onrender.com',
+        'https://www.netflix.com',
+      ],
     },
   })
 
