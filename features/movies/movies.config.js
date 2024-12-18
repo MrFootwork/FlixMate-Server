@@ -32,6 +32,7 @@ module.exports = {
     params: {
       title: '',
       limit: '20',
+      country_list: getUNOGSCountryList(COUNTRY_CODES),
     },
   },
 }
