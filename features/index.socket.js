@@ -91,7 +91,7 @@ function addListenersToSocket(socket, io) {
 
   socket.on('receive-message', message => {
     try {
-      handleMessageReceived(socket, socket.room, message, socket.user)
+      handleMessageReceived(io, socket.room, message, socket.user)
     } catch (error) {
       console.log(error)
       socket.emit('error', error)
@@ -99,13 +99,14 @@ function addListenersToSocket(socket, io) {
   })
 }
 
-function broadcastMessage(socket, room, message) {
+function broadcastMessage(socket, room, message, io) {
+  console.log('Brodcasting message: ', message, ' to room: ', room)
   socket.to(room).emit('new-message', message)
 }
 
 async function handleMessageReceived(socket, room, text, senderId) {
-  const message = await createMessage(text, senderId)
-  broadcastMessage(socket, room, message.text)
+  const message = await createMessage(text, senderId, room)
+  broadcastMessage(socket, room, message)
 }
 
 module.exports = socketServer

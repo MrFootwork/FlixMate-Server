@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const roomSchema = Schema({
   name: { type: String, required: true },
   owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  messages: [{ type: Schema.Types.ObjectId, ref: 'Message', default: [] }],
+  messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
   movie: {
     type: {
       title: String,

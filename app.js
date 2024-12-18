@@ -20,7 +20,7 @@ app.use(
     origin: [
       'http://localhost:5173',
       'https://flixmate-client.onrender.com',
-      'https://www.netflix.com/',
+      'https://www.netflix.com',
     ],
     credentials: true,
   })

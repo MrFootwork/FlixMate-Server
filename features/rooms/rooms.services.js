@@ -16,10 +16,23 @@ async function getRooms() {
 
 async function getRoombyId(roomId) {
   try {
-    return await Room.findById(roomId, { key: 0 }).populate({
-      path: 'participants',
-      select: '-password',
-    })
+    return await Room.findById(roomId, { key: 0 }).populate([
+      {
+        path: 'participants',
+        select: '-password',
+      },
+      {
+        path: 'owner',
+        select: '-password',
+      },
+      {
+        path: 'messages',
+        populate: {
+          path: 'user',
+          select: '-password',
+        },
+      },
+    ])
   } catch (error) {
     throw error
   }

@@ -3,10 +3,12 @@ const Room = require('../rooms/rooms.models')
 
 async function createMessage(text, senderId, roomId) {
   try {
-    const message = await Message.create({ text, senderId })
+    const message = await Message.create({ text, user: senderId })
     const room = await Room.findById(roomId).exec()
+
     room.messages.push(message)
     await room.save()
+    return message
   } catch (error) {
     throw error
   }
