@@ -5,6 +5,8 @@ const {
   getMoviesFromAPI,
   updateMovies,
   searchForMovies,
+  getActionShows,
+  getComedyBlockbusters,
 } = require('./movies.services')
 
 const moviesRouter = require('express').Router()
@@ -27,6 +29,24 @@ moviesRouter.get('/top-picks', async (req, res, next) => {
   try {
     const movies = await getMovies()
     res.status(200).json(movies)
+  } catch (error) {
+    next(error)
+  }
+})
+
+moviesRouter.get('/action', async (req, res, next) => {
+  try {
+    const shows = await getActionShows()
+    res.status(200).json(shows)
+  } catch (error) {
+    next(error)
+  }
+})
+
+moviesRouter.get('/comedy-blockbusters', async (req, res, next) => {
+  try {
+    const shows = await getComedyBlockbusters()
+    res.status(200).json(shows)
   } catch (error) {
     next(error)
   }

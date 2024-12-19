@@ -35,6 +35,23 @@ module.exports = {
       country_list: getUNOGSCountryList(COUNTRY_CODES),
     },
   },
+  actionShows: {
+    ...defaultConfig,
+    params: {
+      order_by: 'rating',
+      start_rating: '8',
+      genre_list: '801362',
+      country_list: getUNOGSCountryList(COUNTRY_CODES),
+    },
+  },
+  comedyBlockBusters: {
+    ...defaultConfig,
+    params: {
+      order_by: 'rating',
+      start_rating: '6',
+      genre_list: '1003219',
+    },
+  },
 }
 
 /**

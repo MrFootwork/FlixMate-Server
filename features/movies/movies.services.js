@@ -122,7 +122,37 @@ async function searchForMovies(searchString) {
   }
 }
 
+async function getActionShows() {
+  try {
+    // top 10 movies with highest rating
+    const searchOption = {
+      ...options.actionShows,
+    }
+    const response = await axios.request(searchOption)
+    // console.log(response.data)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+
+async function getComedyBlockbusters() {
+  try {
+    // top 10 movies with highest rating
+    const searchOption = {
+      ...options.comedyBlockBusters,
+    }
+    const response = await axios.request(searchOption)
+    // console.log(response.data)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+
 module.exports.getMoviesFromAPI = getMoviesFromAPI
 module.exports.updateMovies = updateMovies
 module.exports.getMovies = getMovies
 module.exports.searchForMovies = searchForMovies
+module.exports.getActionShows = getActionShows
+module.exports.getComedyBlockbusters = getComedyBlockbusters
