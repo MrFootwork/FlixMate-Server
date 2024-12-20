@@ -3,6 +3,8 @@ const usersRoutes = require('./users/users.routes')
 const moviesRoutes = require('./movies/movies.routes')
 const roomsRoutes = require('./rooms/rooms.routes')
 const mongoose = require('mongoose')
+const path = require('path')
+const protected = require('../middlewares/protected')
 
 router.use(usersRoutes)
 router.use(moviesRoutes)
@@ -22,5 +24,27 @@ router.get('/health', async (req, res) => {
       .json({ status: 'DOWN', database: 'Disconnected', error: error.message })
   }
 })
+
+router.use(
+  '/download-extension',
+  protected,
+  require('express')
+    .Router()
+    .get('/', (req, res) => {
+      const filePath = path.join(
+        __dirname,
+        '..',
+        'assets',
+        'FlixMate-Extension.zip'
+      )
+
+      res.download(filePath, 'example.zip', err => {
+        if (err) {
+          console.error('Error downloading file:', err)
+          res.status(500).send('Failed to download file.')
+        }
+      })
+    })
+)
 
 module.exports = router
